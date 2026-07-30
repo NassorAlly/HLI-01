@@ -1,0 +1,15 @@
+Version 0.6.0
+
+Status:
+✓ Dataset Module
+✓ Models Module
+✓ Training Module
+✓ Evaluation Module
+
+Completed:
+- Metrics
+- Confusion Matrix
+- Evaluator
+
+Date:
+10 July 2026
