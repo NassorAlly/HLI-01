@@ -1,6 +1,6 @@
 """
 =========================================================
-HLI-01 Version 0.6.0
+HLI-01 Version 0.7.0
 Testing Training Plotter
 =========================================================
 """
@@ -21,7 +21,7 @@ from src.visualization import TrainingPlotter
 def test_training_plots():
 
     print("=" * 60)
-    print("HLI-01 Version 0.6.0")
+    print("HLI-01 Version 0.7.0")
     print("Testing Training Plotter")
     print("=" * 60)
 

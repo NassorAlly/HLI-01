@@ -1,6 +1,6 @@
 """
 =========================================================
-HLI-01 Version 0.6.0
+HLI-01 Version 0.7.0
 Testing Metrics Plotter
 =========================================================
 """
@@ -21,7 +21,7 @@ from src.visualization.metrics_plot import MetricsPlotter
 def test_metrics_plot():
 
     print("=" * 60)
-    print("HLI-01 Version 0.6.0")
+    print("HLI-01 Version 0.7.0")
     print("Testing Metrics Plotter")
     print("=" * 60)
 

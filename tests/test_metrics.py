@@ -1,6 +1,6 @@
 """
 =========================================================
-HLI-01 Version 0.6.0
+HLI-01 Version 0.7.0
 Unit Test - Evaluation Metrics
 =========================================================
 """
@@ -24,7 +24,7 @@ def test_metrics():
     """Test the Metrics class."""
 
     print("=" * 60)
-    print("HLI-01 Version 0.6.0")
+    print("HLI-01 Version 0.7.0")
     print("Unit Test - Evaluation Metrics")
     print("=" * 60)
 

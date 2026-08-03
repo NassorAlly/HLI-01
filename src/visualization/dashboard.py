@@ -1,6 +1,6 @@
 """
 =========================================================
-HLI-01 Version 0.6.0
+HLI-01 Version 0.7.0
 Visualization Dashboard
 =========================================================
 """
@@ -179,3 +179,4 @@ Open PDF Report
             file.write(html)
 
         return filepath
+

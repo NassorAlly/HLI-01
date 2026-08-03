@@ -1,6 +1,6 @@
 """
 =========================================================
-HLI-01 Version 0.6.0
+HLI-01 Version 0.7.0
 Testing Confusion Matrix Plotter
 =========================================================
 """
@@ -25,7 +25,7 @@ from src.visualization.confusion_matrix_plot import ConfusionMatrixPlotter
 def test_confusion_plot():
 
     print("=" * 60)
-    print("HLI-01 Version 0.6.0")
+    print("HLI-01 Version 0.7.0")
     print("Testing Confusion Matrix Plotter")
     print("=" * 60)
 

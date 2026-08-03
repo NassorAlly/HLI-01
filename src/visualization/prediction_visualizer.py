@@ -1,6 +1,6 @@
 """
 =========================================================
-HLI-01 Version 0.6.0
+HLI-01 Version 0.7.0
 Prediction Visualizer
 =========================================================
 """
@@ -104,3 +104,4 @@ class PredictionVisualizer:
             )
 
         return filepath
+

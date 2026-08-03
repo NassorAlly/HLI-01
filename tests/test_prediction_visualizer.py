@@ -1,6 +1,6 @@
 """
 =========================================================
-HLI-01 Version 0.6.0
+HLI-01 Version 0.7.0
 Testing Prediction Visualizer
 =========================================================
 """
@@ -21,7 +21,7 @@ from src.visualization.prediction_visualizer import PredictionVisualizer
 def test_prediction_visualizer():
 
     print("=" * 60)
-    print("HLI-01 Version 0.6.0")
+    print("HLI-01 Version 0.7.0")
     print("Testing Prediction Visualizer")
     print("=" * 60)
 

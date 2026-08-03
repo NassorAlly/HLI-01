@@ -1,6 +1,6 @@
 """
 =========================================================
-HLI-01 Version 0.6.0
+HLI-01 Version 0.7.0
 Visualization Pipeline Integration Test
 =========================================================
 """
@@ -28,7 +28,7 @@ from src.visualization.dashboard import DashboardGenerator
 def test_visualization_pipeline():
 
     print("=" * 70)
-    print("HLI-01 Version 0.6.0")
+    print("HLI-01 Version 0.7.0")
     print("Visualization Pipeline Integration Test")
     print("=" * 70)
 
@@ -231,7 +231,7 @@ def test_visualization_pipeline():
 
     print()
     print("=" * 70)
-    print("HLI-01 Version 0.6.0")
+    print("HLI-01 Version 0.7.0")
     print("ALL VISUALIZATION MODULES PASSED")
     print("=" * 70)
 
@@ -258,3 +258,4 @@ def test_visualization_pipeline():
 
 if __name__ == "__main__":
     test_visualization_pipeline()
+

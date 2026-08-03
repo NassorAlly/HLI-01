@@ -1,6 +1,6 @@
 """
 =========================================================
-HLI-01 Version 0.6.0
+HLI-01 Version 0.7.0
 Testing Dashboard Generator
 =========================================================
 """
@@ -22,7 +22,7 @@ from src.visualization.dashboard import DashboardGenerator
 def test_dashboard():
 
     print("=" * 60)
-    print("HLI-01 Version 0.6.0")
+    print("HLI-01 Version 0.7.0")
     print("Testing Dashboard Generator")
     print("=" * 60)
 
@@ -62,3 +62,4 @@ def test_dashboard():
 
 if __name__ == "__main__":
     test_dashboard()
+

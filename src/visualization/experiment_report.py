@@ -1,6 +1,6 @@
 """
 =========================================================
-HLI-01 Version 0.6.0
+HLI-01 Version 0.7.0
 Experiment Report Generator
 =========================================================
 """
@@ -144,3 +144,4 @@ class ExperimentReportGenerator:
         doc.build(story)
 
         return filepath
+

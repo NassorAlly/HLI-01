@@ -1,6 +1,6 @@
 """
 =========================================================
-HLI-01 Version 0.6.0
+HLI-01 Version 0.7.0
 Testing Experiment Report Generator
 =========================================================
 """
@@ -21,7 +21,7 @@ from src.visualization.experiment_report import ExperimentReportGenerator
 def test_experiment_report():
 
     print("=" * 60)
-    print("HLI-01 Version 0.6.0")
+    print("HLI-01 Version 0.7.0")
     print("Testing Experiment Report Generator")
     print("=" * 60)
 

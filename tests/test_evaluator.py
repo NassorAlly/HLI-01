@@ -1,6 +1,6 @@
 """
 =========================================================
-HLI-01 Version 0.6.0
+HLI-01 Version 0.7.0
 Unit Test - Evaluator
 =========================================================
 """
@@ -23,7 +23,7 @@ from src.evaluation.evaluator import Evaluator
 def test_evaluator():
 
     print("=" * 60)
-    print("HLI-01 Version 0.6.0")
+    print("HLI-01 Version 0.7.0")
     print("Unit Test - Evaluator")
     print("=" * 60)
 
