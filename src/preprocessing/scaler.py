@@ -1,66 +1,105 @@
-import cv2
-import mediapipe as mp
+"""
+scaler.py
+
+Feature scaling utilities for HLI-01 landmark sequences.
+"""
+
 import numpy as np
-import os
-import pandas as pd
 
-mp_hands = mp.solutions.hands
-mp_draw = mp.solutions.drawing_utils
 
-DATA_DIR = "dataset"
-SIGN_NAME = "peace"   # change this for each sign
-NUM_SAMPLES = 100
-SEQUENCE_LENGTH = 30
+class LandmarkScaler:
+    """
+    Scale hand-landmark coordinates to reduce variation
+    caused by different hand sizes and camera distances.
+    """
 
-os.makedirs(f"{DATA_DIR}/{SIGN_NAME}", exist_ok=True)
+    def __init__(self, epsilon=1e-8):
+        """
+        Parameters
+        ----------
+        epsilon : float
+            Small constant used to avoid division by zero.
+        """
+        self.epsilon = epsilon
 
-cap = cv2.VideoCapture(0)
+    def scale_frame(self, frame):
+        """
+        Scale one frame using the maximum Euclidean distance
+        of any landmark from the origin.
 
-hands = mp_hands.Hands(
-    max_num_hands=2,
-    min_detection_confidence=0.7,
-    min_tracking_confidence=0.7
-)
+        Parameters
+        ----------
+        frame : numpy.ndarray
+            Shape (63,)
 
-sample_count = 0
-sequence = []
+        Returns
+        -------
+        numpy.ndarray
+            Scaled frame with shape (63,)
+        """
 
-while sample_count < NUM_SAMPLES:
-    ret, frame = cap.read()
-    if not ret:
-        break
+        frame = np.asarray(frame, dtype=np.float32)
 
-    image_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    results = hands.process(image_rgb)
+        if frame.shape != (63,):
+            raise ValueError(
+                f"Expected frame shape (63,), got {frame.shape}"
+            )
 
-    keypoints = []
+        landmarks = frame.reshape(21, 3)
 
-    if results.multi_hand_landmarks:
-        for hand_landmarks in results.multi_hand_landmarks:
-            mp_draw.draw_landmarks(frame, hand_landmarks, mp_hands.HAND_CONNECTIONS)
-
-            for lm in hand_landmarks.landmark:
-                keypoints.extend([lm.x, lm.y, lm.z])
-
-    if len(keypoints) == 63:
-        sequence.append(keypoints)
-
-    if len(sequence) == SEQUENCE_LENGTH:
-        np.save(
-            f"{DATA_DIR}/{SIGN_NAME}/{sample_count}.npy",
-            np.array(sequence)
+        distances = np.linalg.norm(
+            landmarks,
+            axis=1,
         )
-        sequence = []
-        sample_count += 1
-        print(f"Saved sample {sample_count}/{NUM_SAMPLES}")
 
-    cv2.putText(frame, f"Collecting: {SIGN_NAME} {sample_count}/{NUM_SAMPLES}",
-                (20, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+        scale = np.max(distances)
 
-    cv2.imshow("Data Collection", frame)
+        if scale < self.epsilon:
+            return frame.copy()
 
-    if cv2.waitKey(1) & 0xFF == ord("q"):
-        break
+        scaled = landmarks / scale
 
-cap.release()
-cv2.destroyAllWindows()
+        return scaled.reshape(63).astype(np.float32)
+
+    def scale_sequence(self, sequence):
+        """
+        Scale an entire gesture sequence.
+
+        Parameters
+        ----------
+        sequence : numpy.ndarray
+            Shape (sequence_length, 63)
+
+        Returns
+        -------
+        numpy.ndarray
+            Scaled sequence with the same shape.
+        """
+
+        sequence = np.asarray(sequence, dtype=np.float32)
+
+        if sequence.ndim != 2:
+            raise ValueError(
+                "Sequence must be a 2-dimensional array."
+            )
+
+        if sequence.shape[1] != 63:
+            raise ValueError(
+                f"Expected 63 features, got {sequence.shape[1]}"
+            )
+
+        scaled = np.stack(
+            [
+                self.scale_frame(frame)
+                for frame in sequence
+            ]
+        )
+
+        return scaled.astype(np.float32)
+
+    def __call__(self, sequence):
+        """
+        Allow the scaler to be called like a function.
+        """
+
+        return self.scale_sequence(sequence)

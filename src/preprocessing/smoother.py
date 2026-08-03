@@ -1,66 +1,78 @@
-import cv2
-import mediapipe as mp
+"""
+smoother.py
+
+Temporal smoothing utilities for HLI-01 landmark sequences.
+"""
+
 import numpy as np
-import os
-import pandas as pd
 
-mp_hands = mp.solutions.hands
-mp_draw = mp.solutions.drawing_utils
 
-DATA_DIR = "dataset"
-SIGN_NAME = "peace"   # change this for each sign
-NUM_SAMPLES = 100
-SEQUENCE_LENGTH = 30
+class LandmarkSmoother:
+    """
+    Apply moving-average smoothing across frames in a
+    hand-landmark sequence.
+    """
 
-os.makedirs(f"{DATA_DIR}/{SIGN_NAME}", exist_ok=True)
+    def __init__(self, window_size=3):
+        """
+        Parameters
+        ----------
+        window_size : int
+            Number of frames used in the moving average.
+        """
+        if window_size < 1:
+            raise ValueError("window_size must be at least 1.")
 
-cap = cv2.VideoCapture(0)
+        self.window_size = window_size
 
-hands = mp_hands.Hands(
-    max_num_hands=2,
-    min_detection_confidence=0.7,
-    min_tracking_confidence=0.7
-)
+    def smooth_sequence(self, sequence):
+        """
+        Smooth a complete landmark sequence.
 
-sample_count = 0
-sequence = []
+        Parameters
+        ----------
+        sequence : numpy.ndarray
+            Shape (sequence_length, 63)
 
-while sample_count < NUM_SAMPLES:
-    ret, frame = cap.read()
-    if not ret:
-        break
+        Returns
+        -------
+        numpy.ndarray
+            Smoothed sequence with the same shape.
+        """
 
-    image_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    results = hands.process(image_rgb)
+        sequence = np.asarray(sequence, dtype=np.float32)
 
-    keypoints = []
+        if sequence.ndim != 2:
+            raise ValueError(
+                "Sequence must be a 2-dimensional array."
+            )
 
-    if results.multi_hand_landmarks:
-        for hand_landmarks in results.multi_hand_landmarks:
-            mp_draw.draw_landmarks(frame, hand_landmarks, mp_hands.HAND_CONNECTIONS)
+        if sequence.shape[1] != 63:
+            raise ValueError(
+                f"Expected 63 features, got {sequence.shape[1]}"
+            )
 
-            for lm in hand_landmarks.landmark:
-                keypoints.extend([lm.x, lm.y, lm.z])
+        if self.window_size == 1:
+            return sequence.copy()
 
-    if len(keypoints) == 63:
-        sequence.append(keypoints)
+        smoothed = np.empty_like(sequence)
 
-    if len(sequence) == SEQUENCE_LENGTH:
-        np.save(
-            f"{DATA_DIR}/{SIGN_NAME}/{sample_count}.npy",
-            np.array(sequence)
-        )
-        sequence = []
-        sample_count += 1
-        print(f"Saved sample {sample_count}/{NUM_SAMPLES}")
+        for i in range(len(sequence)):
+            start = max(
+                0,
+                i - self.window_size + 1,
+            )
 
-    cv2.putText(frame, f"Collecting: {SIGN_NAME} {sample_count}/{NUM_SAMPLES}",
-                (20, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+            smoothed[i] = np.mean(
+                sequence[start:i + 1],
+                axis=0,
+            )
 
-    cv2.imshow("Data Collection", frame)
+        return smoothed.astype(np.float32)
 
-    if cv2.waitKey(1) & 0xFF == ord("q"):
-        break
+    def __call__(self, sequence):
+        """
+        Allow the smoother to be called like a function.
+        """
 
-cap.release()
-cv2.destroyAllWindows()
+        return self.smooth_sequence(sequence)

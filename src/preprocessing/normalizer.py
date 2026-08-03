@@ -1,66 +1,102 @@
-import cv2
-import mediapipe as mp
+"""
+normalizer.py
+
+Normalization utilities for HLI-01 hand-landmark sequences.
+"""
+
 import numpy as np
-import os
-import pandas as pd
 
-mp_hands = mp.solutions.hands
-mp_draw = mp.solutions.drawing_utils
 
-DATA_DIR = "dataset"
-SIGN_NAME = "peace"   # change this for each sign
-NUM_SAMPLES = 100
-SEQUENCE_LENGTH = 30
+class LandmarkNormalizer:
+    """
+    Normalize MediaPipe hand-landmark coordinates.
 
-os.makedirs(f"{DATA_DIR}/{SIGN_NAME}", exist_ok=True)
+    Each HLI-01 frame contains 21 landmarks with
+    three coordinates per landmark:
 
-cap = cv2.VideoCapture(0)
+        21 × 3 = 63 features
+    """
 
-hands = mp_hands.Hands(
-    max_num_hands=2,
-    min_detection_confidence=0.7,
-    min_tracking_confidence=0.7
-)
+    def __init__(self, reference_landmark=0):
+        """
+        Parameters
+        ----------
+        reference_landmark : int
+            Landmark used as the coordinate origin.
+            MediaPipe landmark 0 corresponds to the wrist.
+        """
 
-sample_count = 0
-sequence = []
+        self.reference_landmark = reference_landmark
 
-while sample_count < NUM_SAMPLES:
-    ret, frame = cap.read()
-    if not ret:
-        break
+    def normalize_frame(self, frame):
+        """
+        Normalize one frame relative to the reference landmark.
 
-    image_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    results = hands.process(image_rgb)
+        Parameters
+        ----------
+        frame : numpy.ndarray
+            Shape (63,)
 
-    keypoints = []
+        Returns
+        -------
+        numpy.ndarray
+            Normalized frame with shape (63,)
+        """
 
-    if results.multi_hand_landmarks:
-        for hand_landmarks in results.multi_hand_landmarks:
-            mp_draw.draw_landmarks(frame, hand_landmarks, mp_hands.HAND_CONNECTIONS)
+        frame = np.asarray(frame, dtype=np.float32)
 
-            for lm in hand_landmarks.landmark:
-                keypoints.extend([lm.x, lm.y, lm.z])
+        if frame.shape != (63,):
+            raise ValueError(
+                f"Expected frame shape (63,), got {frame.shape}"
+            )
 
-    if len(keypoints) == 63:
-        sequence.append(keypoints)
+        landmarks = frame.reshape(21, 3)
 
-    if len(sequence) == SEQUENCE_LENGTH:
-        np.save(
-            f"{DATA_DIR}/{SIGN_NAME}/{sample_count}.npy",
-            np.array(sequence)
+        reference = landmarks[self.reference_landmark].copy()
+
+        normalized = landmarks - reference
+
+        return normalized.reshape(63).astype(np.float32)
+
+    def normalize_sequence(self, sequence):
+        """
+        Normalize a complete gesture sequence.
+
+        Parameters
+        ----------
+        sequence : numpy.ndarray
+            Shape (sequence_length, 63)
+
+        Returns
+        -------
+        numpy.ndarray
+            Normalized sequence with the same shape.
+        """
+
+        sequence = np.asarray(sequence, dtype=np.float32)
+
+        if sequence.ndim != 2:
+            raise ValueError(
+                "Sequence must be a 2-dimensional array."
+            )
+
+        if sequence.shape[1] != 63:
+            raise ValueError(
+                f"Expected 63 features, got {sequence.shape[1]}"
+            )
+
+        normalized = np.stack(
+            [
+                self.normalize_frame(frame)
+                for frame in sequence
+            ]
         )
-        sequence = []
-        sample_count += 1
-        print(f"Saved sample {sample_count}/{NUM_SAMPLES}")
 
-    cv2.putText(frame, f"Collecting: {SIGN_NAME} {sample_count}/{NUM_SAMPLES}",
-                (20, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+        return normalized.astype(np.float32)
 
-    cv2.imshow("Data Collection", frame)
+    def __call__(self, sequence):
+        """
+        Allow the normalizer to be called like a function.
+        """
 
-    if cv2.waitKey(1) & 0xFF == ord("q"):
-        break
-
-cap.release()
-cv2.destroyAllWindows()
+        return self.normalize_sequence(sequence)
