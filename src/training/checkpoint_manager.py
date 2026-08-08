@@ -1,7 +1,7 @@
 """
 checkpoint_manager.py
 
-Saves and loads model checkpoints.
+Saves and loads model checkpoints for HLI-01.
 """
 
 from pathlib import Path
@@ -10,8 +10,14 @@ import torch
 
 
 class CheckpointManager:
+    """
+    Handles model checkpoint saving and loading.
+    """
 
-    def __init__(self, checkpoint_dir="outputs/checkpoints"):
+    def __init__(
+        self,
+        checkpoint_dir="outputs/checkpoints",
+    ):
 
         self.checkpoint_dir = Path(checkpoint_dir)
 
@@ -41,16 +47,28 @@ class CheckpointManager:
             filepath,
         )
 
+        return filepath
+
     def load(
         self,
         model,
         optimizer,
         filename="best_model.pth",
+        device="cpu",
     ):
 
         filepath = self.checkpoint_dir / filename
 
-        checkpoint = torch.load(filepath)
+        if not filepath.exists():
+            raise FileNotFoundError(
+                f"Checkpoint not found: {filepath}"
+            )
+
+        checkpoint = torch.load(
+            filepath,
+            map_location=device,
+            weights_only=False,
+        )
 
         model.load_state_dict(
             checkpoint["model_state_dict"]
@@ -60,7 +78,7 @@ class CheckpointManager:
             checkpoint["optimizer_state_dict"]
         )
 
-        return (
-            checkpoint["epoch"],
-            checkpoint["loss"],
-        )
+        epoch = checkpoint["epoch"]
+        loss = checkpoint["loss"]
+
+        return epoch, loss
