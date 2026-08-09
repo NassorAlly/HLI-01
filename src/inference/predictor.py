@@ -1,66 +1,138 @@
-import cv2
-import mediapipe as mp
+"""
+predictor.py
+
+Inference utilities for HLI-01.
+
+Provides reusable prediction logic for trained models.
+"""
+
 import numpy as np
-import os
-import pandas as pd
+import torch
 
-mp_hands = mp.solutions.hands
-mp_draw = mp.solutions.drawing_utils
-
-DATA_DIR = "dataset"
-SIGN_NAME = "peace"   # change this for each sign
-NUM_SAMPLES = 100
-SEQUENCE_LENGTH = 30
-
-os.makedirs(f"{DATA_DIR}/{SIGN_NAME}", exist_ok=True)
-
-cap = cv2.VideoCapture(0)
-
-hands = mp_hands.Hands(
-    max_num_hands=2,
-    min_detection_confidence=0.7,
-    min_tracking_confidence=0.7
+from src.config.settings import (
+    DEVICE,
+    NUM_FEATURES,
+    SEQUENCE_LENGTH,
 )
 
-sample_count = 0
-sequence = []
 
-while sample_count < NUM_SAMPLES:
-    ret, frame = cap.read()
-    if not ret:
-        break
+class Predictor:
+    """
+    Runs inference on a trained HLI-01 model.
+    """
 
-    image_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    results = hands.process(image_rgb)
+    def __init__(
+        self,
+        model,
+        class_names,
+        device=DEVICE,
+    ):
+        self.model = model
+        self.device = torch.device(device)
+        self.class_names = sorted(class_names)
 
-    keypoints = []
+        self.model.to(self.device)
+        self.model.eval()
 
-    if results.multi_hand_landmarks:
-        for hand_landmarks in results.multi_hand_landmarks:
-            mp_draw.draw_landmarks(frame, hand_landmarks, mp_hands.HAND_CONNECTIONS)
+    def _validate_sequence(self, sequence):
+        """
+        Validate inference input shape and values.
+        """
 
-            for lm in hand_landmarks.landmark:
-                keypoints.extend([lm.x, lm.y, lm.z])
-
-    if len(keypoints) == 63:
-        sequence.append(keypoints)
-
-    if len(sequence) == SEQUENCE_LENGTH:
-        np.save(
-            f"{DATA_DIR}/{SIGN_NAME}/{sample_count}.npy",
-            np.array(sequence)
+        sequence = np.asarray(
+            sequence,
+            dtype=np.float32,
         )
-        sequence = []
-        sample_count += 1
-        print(f"Saved sample {sample_count}/{NUM_SAMPLES}")
 
-    cv2.putText(frame, f"Collecting: {SIGN_NAME} {sample_count}/{NUM_SAMPLES}",
-                (20, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+        expected_shape = (
+            SEQUENCE_LENGTH,
+            NUM_FEATURES,
+        )
 
-    cv2.imshow("Data Collection", frame)
+        if sequence.shape != expected_shape:
+            raise ValueError(
+                f"Expected sequence shape "
+                f"{expected_shape}, "
+                f"got {sequence.shape}"
+            )
 
-    if cv2.waitKey(1) & 0xFF == ord("q"):
-        break
+        if np.isnan(sequence).any():
+            raise ValueError(
+                "Sequence contains NaN values."
+            )
 
-cap.release()
-cv2.destroyAllWindows()
+        if np.isinf(sequence).any():
+            raise ValueError(
+                "Sequence contains infinite values."
+            )
+
+        return sequence
+
+    def predict(self, sequence):
+        """
+        Predict a sign from one sequence.
+
+        Parameters
+        ----------
+        sequence : array-like
+            Sequence with shape (30, 63).
+
+        Returns
+        -------
+        dict
+            Prediction information containing:
+            - class_id
+            - label
+            - confidence
+            - probabilities
+        """
+
+        sequence = self._validate_sequence(
+            sequence
+        )
+
+        tensor = torch.from_numpy(
+            sequence
+        ).unsqueeze(0)
+
+        tensor = tensor.to(
+            self.device
+        )
+
+        with torch.no_grad():
+            logits = self.model(
+                tensor
+            )
+
+            probabilities = torch.softmax(
+                logits,
+                dim=1,
+            )
+
+        confidence, class_id = torch.max(
+            probabilities,
+            dim=1,
+        )
+
+        class_id = int(
+            class_id.item()
+        )
+
+        confidence = float(
+            confidence.item()
+        )
+
+        probabilities = probabilities.squeeze(
+            0
+        ).cpu().numpy()
+
+        label = self.class_names[
+            class_id
+        ]
+
+        return {
+            "class_id": class_id,
+            "label": label,
+            "confidence": confidence,
+            "probabilities": probabilities,
+        }

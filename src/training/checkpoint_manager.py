@@ -2,6 +2,11 @@
 checkpoint_manager.py
 
 Saves and loads model checkpoints for HLI-01.
+
+Supports:
+- Saving training checkpoints
+- Resuming training with model and optimizer state
+- Loading model-only checkpoints for inference
 """
 
 from pathlib import Path
@@ -18,7 +23,6 @@ class CheckpointManager:
         self,
         checkpoint_dir="outputs/checkpoints",
     ):
-
         self.checkpoint_dir = Path(checkpoint_dir)
 
         self.checkpoint_dir.mkdir(
@@ -34,6 +38,9 @@ class CheckpointManager:
         loss,
         filename="best_model.pth",
     ):
+        """
+        Save a complete training checkpoint.
+        """
 
         filepath = self.checkpoint_dir / filename
 
@@ -56,6 +63,9 @@ class CheckpointManager:
         filename="best_model.pth",
         device="cpu",
     ):
+        """
+        Load a complete checkpoint for resuming training.
+        """
 
         filepath = self.checkpoint_dir / filename
 
@@ -82,3 +92,32 @@ class CheckpointManager:
         loss = checkpoint["loss"]
 
         return epoch, loss
+
+    def load_model(
+        self,
+        model,
+        filename="best_model.pth",
+        device="cpu",
+    ):
+        """
+        Load only the model state for inference.
+        """
+
+        filepath = self.checkpoint_dir / filename
+
+        if not filepath.exists():
+            raise FileNotFoundError(
+                f"Checkpoint not found: {filepath}"
+            )
+
+        checkpoint = torch.load(
+            filepath,
+            map_location=device,
+            weights_only=False,
+        )
+
+        model.load_state_dict(
+            checkpoint["model_state_dict"]
+        )
+
+        return checkpoint

@@ -1,4 +1,5 @@
 import sys
+import tempfile
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -9,41 +10,83 @@ import torch
 from src.models.lstm_model import LSTMModel
 from src.training.checkpoint_manager import CheckpointManager
 
-print("=" * 50)
-print("Testing Checkpoint Manager")
-print("=" * 50)
 
-model = LSTMModel(
-    input_size=63,
-    hidden_size=128,
-    num_layers=2,
-    num_classes=4,
-)
+def create_model():
+    return LSTMModel(
+        input_size=63,
+        hidden_size=128,
+        num_layers=2,
+        num_classes=4,
+    )
 
-optimizer = torch.optim.Adam(
-    model.parameters(),
-    lr=0.001,
-)
 
-manager = CheckpointManager()
+def test_checkpoint_manager():
+    with tempfile.TemporaryDirectory() as temp_dir:
 
-manager.save(
-    model=model,
-    optimizer=optimizer,
-    epoch=5,
-    loss=0.1234,
-)
+        model = create_model()
 
-epoch, loss = manager.load(
-    model=model,
-    optimizer=optimizer,
-)
+        optimizer = torch.optim.Adam(
+            model.parameters(),
+            lr=0.001,
+        )
 
-print("Epoch :", epoch)
-print("Loss  :", loss)
+        manager = CheckpointManager(
+            checkpoint_dir=temp_dir
+        )
 
-assert epoch == 5
-assert abs(loss - 0.1234) < 1e-6
+        manager.save(
+            model=model,
+            optimizer=optimizer,
+            epoch=5,
+            loss=0.1234,
+        )
 
-print("\n✓ Checkpoint Manager works correctly.")
-print("TEST PASSED")
+        epoch, loss = manager.load(
+            model=model,
+            optimizer=optimizer,
+        )
+
+        assert epoch == 5
+        assert abs(loss - 0.1234) < 1e-6
+
+
+def test_model_only_checkpoint_loading():
+    with tempfile.TemporaryDirectory() as temp_dir:
+
+        original_model = create_model()
+
+        optimizer = torch.optim.Adam(
+            original_model.parameters(),
+            lr=0.001,
+        )
+
+        manager = CheckpointManager(
+            checkpoint_dir=temp_dir
+        )
+
+        manager.save(
+            model=original_model,
+            optimizer=optimizer,
+            epoch=5,
+            loss=0.1234,
+        )
+
+        inference_model = create_model()
+
+        checkpoint = manager.load_model(
+            model=inference_model,
+        )
+
+        assert checkpoint["epoch"] == 5
+        assert abs(
+            checkpoint["loss"] - 0.1234
+        ) < 1e-6
+
+        for original_param, loaded_param in zip(
+            original_model.parameters(),
+            inference_model.parameters(),
+        ):
+            assert torch.equal(
+                original_param,
+                loaded_param,
+            )
