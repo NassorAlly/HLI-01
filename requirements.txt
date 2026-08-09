@@ -1,5 +1,5 @@
 # ==========================================================
-# HLI-01 Version 0.8.0
+# HLI-01 Version 0.9.0
 # Project Dependencies
 # ==========================================================
 
@@ -8,11 +8,11 @@ torch>=2.0.0
 torchvision>=0.15.0
 
 # Computer Vision
-opencv-python>=4.8.0
-mediapipe>=0.10.0
+opencv-contrib-python==4.11.0.86
+mediapipe==0.10.21
 
 # Scientific Computing
-numpy>=1.24.0
+numpy==1.26.4
 pandas>=2.0.0
 scikit-learn>=1.3.0
 

@@ -1,7 +1,7 @@
 """
 train.py
 
-Main training entry point for HLI-01 v0.8.0.
+Main training entry point for HLI-01 v0.9.0.
 
 Uses the centralized project configuration to run
 the complete model-training pipeline.
@@ -51,11 +51,11 @@ def set_random_seed(seed):
 
 def main():
     """
-    Run the complete HLI-01 v0.8.0 training pipeline.
+    Run the complete HLI-01 v0.9.0 training pipeline.
     """
 
     print("=" * 60)
-    print("HLI-01 v0.8.0 - Training Pipeline")
+    print("HLI-01 v0.9.0 - Training Pipeline")
     print("=" * 60)
 
     # --------------------------------------------------
@@ -365,7 +365,7 @@ def main():
     print("=" * 60)
 
     print(
-        "HLI-01 v0.8.0 training "
+        "HLI-01 v0.9.0 training "
         "pipeline completed successfully."
     )
 
