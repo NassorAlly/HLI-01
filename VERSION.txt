@@ -1,15 +1,45 @@
-Version 0.6.0
+HLI-01 Version 0.9.0
 
 Status:
 ✓ Dataset Module
 ✓ Models Module
 ✓ Training Module
 ✓ Evaluation Module
+✓ Inference Module
+✓ Real-Time Inference Module
 
 Completed:
-- Metrics
-- Confusion Matrix
+
+- Dataset loading and validation
+- Dataset splitting and preprocessing
+- BiLSTM + Attention model
+- Training and validation pipeline
+- Metrics and evaluation
+- Confusion matrix
 - Evaluator
+- Early stopping
+- Learning-rate scheduling
+- Model checkpointing
+- Checkpoint restoration
+- Resume training
+- Training visualization
+- Predictor
+- Trained-model inference
+- MediaPipe hand-landmark extraction
+- Real-time webcam inference
+- Live sign-language prediction
+- Prediction confidence and probabilities
+- Real-time transition between signs
+- Automated testing (86 tests passing)
+
+Current Version:
+0.9.0
+
+Release Theme:
+Real-Time Inference Pipeline
+
+Status:
+Stable Development Release
 
 Date:
-10 July 2026
+9 August 2026

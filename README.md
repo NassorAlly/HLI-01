@@ -1,84 +1,300 @@
-# HLI-01: Holistic Language Intelligence
+# HLI-01 Sign Language Recognition Framework
 
-*A Modular Deep Learning Framework for Dynamic Sign Language Recognition*
-
-**Current Version:** 0.8.0  
-**Release Theme:** Building the Training Pipeline  
+**Current Version:** 0.9.0  
+**Release Theme:** Real-Time Inference Pipeline  
 **Status:** Stable Development Release
 
 ---
 
 ## Overview
 
-HLI-01 (Holistic Language Intelligence) is a modular deep learning framework
-for dynamic hand gesture and sign language recognition.
+HLI-01 is a modular research framework for sign-language recognition
+using temporal hand-landmark sequences and deep-learning models.
 
-The framework is designed for research, education, experimentation, and the
-development of intelligent sign-language recognition systems using sequential
-hand-landmark data.
+The framework provides an end-to-end workflow covering:
 
-HLI-01 processes temporal hand-landmark sequences extracted using MediaPipe
-and provides an extensible architecture covering the complete machine-learning
-workflow.
-
-The current framework includes:
-
-- Dataset collection
-- Dataset validation
-- Dataset preprocessing
-- Label management
-- Dataset statistics
-- Stratified dataset splitting
+- Sign-language dataset collection
+- Dataset validation and preprocessing
+- Stratified train/validation/test splitting
 - PyTorch dataset and DataLoader management
-- LSTM-based sequence modelling
-- Model training
-- Validation
+- Deep-learning model construction
+- Model training and validation
+- Best-model checkpointing
+- Checkpoint restoration and resume training
 - Early stopping
 - Learning-rate scheduling
-- Model checkpointing
-- Resume-training support
-- Held-out test evaluation
-- Performance metrics
-- Confusion matrix analysis
-- Training visualization
-- Prediction visualization
-- Experiment reporting
-- HTML dashboard generation
+- Held-out test-set evaluation
+- Metrics and confusion-matrix generation
+- Training and evaluation visualization
+- Offline sign inference
+- Real-time webcam-based sign recognition
+- MediaPipe hand-landmark extraction
+- Prediction confidence and class-probability reporting
 - Automated regression testing
 
-Version **0.8.0** establishes the complete HLI-01 training pipeline and connects
-the data, model, training, evaluation, and visualization subsystems into an
-integrated experimental workflow.
+Version 0.9.0 extends the training capabilities introduced in Version
+0.8.0 by adding the real-time inference pipeline.
+
+A trained HLI-01 model can now process live webcam input, extract hand
+landmarks, accumulate temporal sequences, and produce real-time sign
+predictions.
+
+The currently supported sign classes are:
+
+- `hello`
+- `no`
+- `peace`
+- `yes`
 
 ---
 
-# Development Progress
+## Development Progression
 
-HLI-01 is being developed incrementally through clearly defined framework
-milestones.
+HLI-01 is being developed incrementally, with each release introducing
+a major layer of the complete sign-language recognition framework.
+
+### Version 0.5.0 — Visualization System
+
+Established the visualization and experiment-output infrastructure
+required to inspect model behavior and research results.
+
+Key capabilities included:
+
+- Training-history visualization
+- Confusion-matrix visualization
+- Classification-metrics visualization
+- Prediction visualization
+- Experiment reporting
+- Dashboard generation
+
+↓
+
+### Version 0.6.0 — Core Framework
+
+Established the modular software architecture of HLI-01 and integrated
+the major framework components.
+
+Key capabilities included:
+
+- Dataset module
+- Models module
+- Training module
+- Evaluation module
+- Metrics computation
+- Confusion-matrix generation
+- Evaluator
+- Model factory and registry
+- Modular visualization framework
+
+↓
+
+### Version 0.7.0 — Data Pipeline
+
+Introduced the complete data-management pipeline required to prepare
+sign-language sequences for model training and evaluation.
+
+Key capabilities included:
+
+- Dataset collection
+- Dataset loading
+- Dataset validation
+- Automatic label management
+- Stratified dataset splitting
+- PyTorch Dataset integration
+- Landmark normalization
+- Feature scaling
+- Temporal smoothing
+- Dataset statistics
+- Training DataLoader management
+
+Dataset configuration:
+
+- Sign classes: 4
+- Classes: `hello`, `no`, `peace`, `yes`
+- Samples per class: 100
+- Total samples: 400
+- Sequence length: 30 frames
+- Features per frame: 63
+- Training split: 70%
+- Validation split: 15%
+- Testing split: 15%
+
+↓
+
+### Version 0.8.0 — Training Pipeline
+
+Connected the data pipeline to the HLI-01 model architecture and
+introduced the complete model-training and evaluation lifecycle.
+
+Key capabilities included:
+
+- Batch-based PyTorch training
+- Training and validation loops
+- Cross-entropy loss
+- Adam optimization
+- Training and validation accuracy tracking
+- Training-history management
+- Best-model checkpointing
+- Checkpoint restoration
+- Resume training
+- Early stopping
+- Learning-rate scheduling
+- Learning-rate history tracking
+- Training-history visualization
+- Held-out test evaluation
+- Automatic evaluation artifact generation
+
+Version 0.8.0 held-out test performance:
+
+- Test samples: 60
+- Accuracy: 98.33%
+- Weighted Precision: 98.44%
+- Weighted Recall: 98.33%
+- Weighted F1-score: 98.33%
+- Correct predictions: 59 / 60
+
+↓
+
+### Version 0.9.0 — Real-Time Inference Pipeline
+
+**CURRENT RELEASE**
+
+Version 0.9.0 extends HLI-01 from model development and training into
+an operational real-time sign-language recognition framework.
+
+Key capabilities include:
+
+- Reusable Predictor
+- Trained-checkpoint loading for inference
+- Offline sequence inference
+- Webcam-based real-time inference
+- MediaPipe hand-landmark extraction
+- 30-frame temporal sequence buffering
+- Live sign prediction
+- Prediction confidence reporting
+- Class-probability output
+- Input-shape validation
+- NaN-value validation
+- Infinite-value validation
+- Real-time transition between supported signs
+- Automated Predictor testing
+- Automated real-time inference testing
+- Reproducible MediaPipe/OpenCV/NumPy environment
+
+The real-time pipeline has been functionally verified with the four
+currently supported signs:
+
+- `hello`
+- `no`
+- `peace`
+- `yes`
+
+A fully trained checkpoint was successfully used for offline and
+real-time inference.
+
+Training checkpoint information:
+
+- Best checkpoint epoch: 40
+- Best validation loss: approximately 0.0449
+
+A sample from the `peace` class was correctly predicted with
+approximately 0.999 confidence.
+
+This single-sample confidence value represents model confidence for
+that individual prediction and should not be interpreted as overall
+model accuracy.
+
+Automated regression status:
+
+- 86 tests passed
+- No regression detected in existing framework components
+
+↓
+
+### Version 1.0.0 — Research-Ready Framework
+
+**NEXT MILESTONE — PLANNED**
+
+Version 1.0.0 will focus on transforming the operational HLI-01
+prototype into a fully validated, reproducible, and publication-ready
+research framework.
+
+Planned priorities include:
+
+- Comprehensive held-out test evaluation
+- Per-class precision, recall, and F1-score analysis
+- Final confusion-matrix analysis
+- Real-time inference performance evaluation
+- Latency measurement
+- Frames-per-second (FPS) measurement
+- Robustness testing
+- Testing across users, backgrounds, and lighting conditions
+- Reproducibility verification
+- Final experiment artifacts
+- Publication-quality figures and tables
+- Final technical documentation
+- Research experiment reporting
+- Stable Version 1.0.0 release
+
+---
+
+## System Architecture
+
+The current HLI-01 framework follows the general pipeline:
 
 ```text
-v0.5.0
-Visualization System
-        ↓
-v0.6.0
-Core Framework
-        ↓
-v0.7.0
-Data Pipeline
-        ↓
-v0.8.0
-Training Pipeline
-        ↓
-Future Development
-        ↓
-v1.0.0
-Research-Ready Framework
+Dataset
+   ↓
+Dataset Validation
+   ↓
+Preprocessing
+   ↓
+Train / Validation / Test Split
+   ↓
+PyTorch DataLoaders
+   ↓
+BiLSTM + Attention Model
+   ↓
+Training
+   ↓
+Validation
+   ↓
+Best-Model Checkpoint
+   ↓
+Held-Out Test Evaluation
+   ↓
+Offline / Real-Time Inference
+   ↓
+Prediction + Confidence
+```
+
+For real-time operation:
+
+```text
+Webcam
+   ↓
+Video Frame Capture
+   ↓
+MediaPipe Hand Detection
+   ↓
+Hand-Landmark Extraction
+   ↓
+30-Frame Sequence Buffer
+   ↓
+Trained HLI-01 Model
+   ↓
+Predictor
+   ↓
+Class Probabilities
+   ↓
+Predicted Sign
+   ↓
+Confidence Display
 ```
 
 ---
 
-# Current Dataset Configuration
+## Dataset
 
 The current HLI-01 experimental dataset contains four sign classes:
 
@@ -89,361 +305,130 @@ peace
 yes
 ```
 
-Dataset configuration:
-
-| Parameter | Value |
-|---|---:|
-| Number of classes | 4 |
-| Samples per class | 100 |
-| Total samples | 400 |
-| Sequence length | 30 frames |
-| Features per frame | 63 |
-| Data type | float32 |
-| Training split | 70% |
-| Validation split | 15% |
-| Testing split | 15% |
-| Training samples | 280 |
-| Validation samples | 60 |
-| Test samples | 60 |
-
-A fixed random seed is used to support reproducible dataset splitting.
-
----
-
-# Framework Architecture
-
-The current HLI-01 workflow can be represented as:
+Each class contains:
 
 ```text
-Raw Sign Samples
-       │
-       ▼
-Dataset Collection
-       │
-       ▼
-Dataset Validation
-       │
-       ▼
-Preprocessing
-       │
-       ▼
-Label Management
-       │
-       ▼
-Stratified Dataset Split
-       │
-       ├─────────────┬─────────────┐
-       ▼             ▼             ▼
-    Training      Validation      Testing
-       │             │             │
-       └──────┬──────┘             │
-              ▼                    │
-        Model Training             │
-              │                    │
-              ▼                    │
-         Validation                │
-              │                    │
-              ▼                    │
-     Learning-Rate Scheduler       │
-              │                    │
-              ▼                    │
-        Early Stopping             │
-              │                    │
-              ▼                    │
-       Best Checkpoint             │
-              │                    │
-              └──────────┬─────────┘
-                         ▼
-                  Final Evaluation
-                         │
-                         ▼
-              Metrics + Confusion Matrix
-                         │
-                         ▼
-                 Evaluation Artifacts
+100 sequences
+```
+
+Each sequence contains:
+
+```text
+30 frames
+```
+
+Each frame contains:
+
+```text
+63 hand-landmark features
+```
+
+Therefore, the current dataset contains:
+
+```text
+4 classes × 100 samples = 400 sequences
+```
+
+The dataset is divided using stratified splitting:
+
+```text
+Training   : 70%
+Validation : 15%
+Testing    : 15%
+```
+
+This produces:
+
+```text
+Training   : 280 samples
+Validation : 60 samples
+Testing    : 60 samples
 ```
 
 ---
 
-# Features
+## Model
 
-## Dataset Module
+HLI-01 currently uses a temporal deep-learning architecture based on:
 
-The dataset subsystem provides:
+```text
+Hand-Landmark Sequence
+        ↓
+Bidirectional LSTM
+        ↓
+Attention
+        ↓
+Classification Layer
+        ↓
+Sign Prediction
+```
 
-- Dataset Collector
-- Dataset Loader
-- Dataset Validator
-- Dataset Statistics
-- Dataset Splitter
-- Label Manager
-- PyTorch `SignDataset`
-- DataLoader management
-
-The framework validates dataset structure and supports reproducible,
-stratified train-validation-test splitting.
-
----
-
-## Preprocessing Module
-
-The preprocessing pipeline includes:
-
-- Landmark normalization
-- Landmark scaling
-- Temporal smoothing
-- Batch preprocessing
-- Configurable preprocessing stages
-- Input-dimension validation
-
-These components prepare landmark sequences before they are supplied to the
-learning pipeline.
+The model processes temporal sequences of hand-landmark features and
+learns discriminative temporal patterns for sign classification.
 
 ---
 
-## Model Module
+## Training Pipeline
 
-The model subsystem provides reusable sequence-classification components.
+The HLI-01 training pipeline provides:
 
-Current capabilities include:
-
-- LSTM-based sequence model
-- Configurable input dimensions
-- Configurable hidden dimensions
-- Configurable number of recurrent layers
-- Dropout
-- Multi-class classification output
-- Base model architecture
-- Model Factory
-- Model Registry
-
-The modular architecture is intended to support additional sequence models in
-future HLI-01 experiments.
-
----
-
-# Training Module
-
-Version 0.8.0 introduces the complete training subsystem.
-
-Major capabilities include:
-
-- Batch-based PyTorch training
-- Cross-entropy loss
+- Batch-based training
+- Cross-entropy loss computation
+- Backpropagation
 - Adam optimization
+- Validation after every epoch
 - Training-loss tracking
-- Training-accuracy tracking
 - Validation-loss tracking
+- Training-accuracy tracking
 - Validation-accuracy tracking
-- Training-history management
-- Best-epoch tracking
-- Automatic best-model checkpointing
+- Best-epoch identification
+- Best-model checkpointing
 - Early stopping
 - Learning-rate scheduling
 - Resume-training support
-- Automatic training visualization
+- Training-history recording
 
----
-
-## Training Configuration
-
-Central training parameters are maintained in:
-
-```text
-src/config/settings.py
-```
-
-Core configuration includes:
-
-```text
-SEQUENCE_LENGTH = 30
-NUM_FEATURES    = 63
-NUM_CLASSES     = 4
-
-TRAIN_RATIO     = 0.70
-VALID_RATIO     = 0.15
-TEST_RATIO      = 0.15
-
-RANDOM_SEED     = 42
-
-BATCH_SIZE      = 32
-NUM_EPOCHS      = 50
-LEARNING_RATE   = 0.001
-
-HIDDEN_SIZE     = 128
-NUM_LAYERS      = 2
-DROPOUT         = 0.30
-```
-
-Additional training settings control early stopping, checkpoint management,
-learning-rate scheduling, and output directories.
-
----
-
-# Early Stopping
-
-HLI-01 monitors validation loss during training.
-
-If validation performance stops improving for the configured number of epochs,
-training can terminate automatically.
-
-This reduces unnecessary training and helps limit overfitting.
-
----
-
-# Learning-Rate Scheduling
-
-Version 0.8.0 integrates a validation-aware learning-rate scheduler based on
-PyTorch `ReduceLROnPlateau`.
-
-The scheduler monitors validation loss and reduces the optimizer learning rate
-when improvement stalls.
-
-The learning-rate scheduler has been independently tested and verified.
-
----
-
-# Checkpoint Management
-
-HLI-01 automatically saves the best model according to validation loss.
-
-The primary checkpoint is stored at:
-
-```text
-outputs/checkpoints/best_model.pth
-```
-
-Checkpoint information includes:
-
-- Model state
-- Optimizer state
-- Epoch
-- Validation loss
-
-The checkpoint system also supports restoration of model and optimizer state
-for resumed training.
-
----
-
-# Training the Model
-
-Run the complete training pipeline from the project root:
+The main training entry point is:
 
 ```bash
 python train.py
 ```
 
-The training pipeline performs:
-
-```text
-Load Dataset
-    ↓
-Create Train / Validation / Test DataLoaders
-    ↓
-Create Model
-    ↓
-Create Optimizer
-    ↓
-Train Model
-    ↓
-Validate Model
-    ↓
-Adjust Learning Rate
-    ↓
-Apply Early Stopping
-    ↓
-Save Best Checkpoint
-    ↓
-Generate Training Figures
-```
-
-The maximum number of epochs is configured centrally, while early stopping can
-terminate training sooner when appropriate.
-
 ---
 
-# Training Outputs
+## Evaluation
 
-Training automatically generates:
+The evaluation pipeline loads the best trained checkpoint and evaluates
+the model using the held-out test dataset.
 
-```text
-outputs/
-│
-├── checkpoints/
-│   └── best_model.pth
-│
-└── figures/
-    ├── loss_curve.png
-    ├── accuracy_curve.png
-    └── learning_rate_curve.png
-```
-
-The figures show:
-
-- Training loss
-- Validation loss
-- Training accuracy
-- Validation accuracy
-- Learning-rate evolution
-
----
-
-# Evaluation Module
-
-The evaluation subsystem computes classification performance using the
-held-out test dataset.
-
-Supported metrics include:
+The evaluation system provides:
 
 - Accuracy
-- Weighted Precision
-- Weighted Recall
-- Weighted F1-score
-- Confusion Matrix
+- Precision
+- Recall
+- F1-score
+- Confusion matrix
+- Prediction analysis
+- Persistent evaluation artifacts
 
-The evaluation components are implemented under:
-
-```text
-src/evaluation/
-```
-
----
-
-# Evaluating the Best Model
-
-After training, run:
+The main evaluation entry point is:
 
 ```bash
 python evaluate.py
 ```
 
-The evaluation entry point:
+The Version 0.8.0 held-out test evaluation produced:
 
-1. Loads the test DataLoader.
-2. Reconstructs the model architecture.
-3. Loads the best saved checkpoint.
-4. Performs inference on the held-out test split.
-5. Computes classification metrics.
-6. Computes the confusion matrix.
-7. Displays the results.
-8. Saves the official evaluation artifacts.
+```text
+Test samples       : 60
+Correct predictions: 59 / 60
+Accuracy           : 98.33%
+Weighted Precision : 98.44%
+Weighted Recall    : 98.33%
+Weighted F1-score  : 98.33%
+```
 
----
-
-# Version 0.8.0 Test Results
-
-The best saved checkpoint was evaluated using the held-out 60-sample test
-split.
-
-| Metric | Result |
-|---|---:|
-| Accuracy | **98.33%** |
-| Weighted Precision | **98.44%** |
-| Weighted Recall | **98.33%** |
-| Weighted F1-score | **98.33%** |
-| Correct Predictions | **59 / 60** |
-
-The resulting confusion matrix was:
+Confusion matrix:
 
 ```text
 [[14  1  0  0]
@@ -452,512 +437,455 @@ The resulting confusion matrix was:
  [ 0  0  0 15]]
 ```
 
-The model correctly classified **59 of the 60 held-out test samples**.
+These results are retained as the historical held-out evaluation
+results associated with the Version 0.8.0 training-pipeline release.
 
 ---
 
-# Evaluation Outputs
+## Inference
 
-Final evaluation artifacts are automatically saved under:
+Version 0.9.0 introduces a reusable inference subsystem.
+
+The Predictor accepts a sign sequence and:
+
+1. Validates the input sequence.
+2. Converts the input to `float32`.
+3. Checks the expected sequence shape.
+4. Rejects NaN values.
+5. Rejects infinite values.
+6. Converts the sequence to a PyTorch tensor.
+7. Places the tensor on the configured device.
+8. Runs the trained model in evaluation mode.
+9. Applies Softmax to model logits.
+10. Determines the predicted class.
+11. Returns the prediction confidence.
+12. Returns the complete class-probability distribution.
+
+The prediction output includes:
 
 ```text
-outputs/evaluation/
+class_id
+label
+confidence
+probabilities
 ```
-
-Current artifacts:
-
-```text
-outputs/evaluation/
-├── evaluation_results.txt
-└── confusion_matrix.npy
-```
-
-`evaluation_results.txt` provides a human-readable record of the experiment
-results.
-
-`confusion_matrix.npy` preserves the confusion matrix as a NumPy array for
-future programmatic analysis.
 
 ---
 
-# Visualization Module
+## Real-Time Inference
 
-The HLI-01 visualization framework includes:
+Version 0.9.0 introduces live webcam-based sign recognition.
 
-- Training-loss visualization
-- Training-accuracy visualization
-- Learning-rate visualization
-- Confusion-matrix visualization
-- Classification-metrics visualization
+The real-time system performs:
+
+- Webcam frame capture
+- Hand detection
+- MediaPipe hand-landmark extraction
+- Temporal sequence construction
+- 30-frame sequence buffering
+- Model inference
+- Live sign prediction
+- Confidence reporting
+- Transition between recognized signs
+
+The real-time inference module can be launched from the project root
+using:
+
+```bash
+python -m src.inference.realtime_inference
+```
+
+Press:
+
+```text
+Q
+```
+
+while the webcam window is active to close the real-time inference
+application.
+
+---
+
+## Checkpoint Management
+
+HLI-01 automatically saves the best-performing model checkpoint during
+training.
+
+The default checkpoint is stored at:
+
+```text
+outputs/checkpoints/best_model.pth
+```
+
+The checkpoint contains training information including:
+
+- Model state
+- Optimizer state
+- Epoch
+- Validation loss
+
+For the trained checkpoint verified during Version 0.9.0 development:
+
+```text
+Best checkpoint epoch : 40
+Best validation loss  : approximately 0.0449
+```
+
+Checkpoint loading is supported for:
+
+- Evaluation
+- Offline prediction
+- Real-time prediction
+- Resume training
+
+---
+
+## Visualization
+
+HLI-01 provides visualization utilities for research analysis and
+experiment inspection.
+
+Visualization capabilities include:
+
+- Training-loss curves
+- Validation-loss curves
+- Training-accuracy curves
+- Validation-accuracy curves
+- Learning-rate curves
+- Confusion matrices
+- Classification metrics
 - Prediction visualization
-- Experiment report generation
-- HTML dashboard generation
-
-The visualization system uses a non-interactive Matplotlib backend to support
-automated testing and headless execution.
+- Experiment reporting
+- Dashboard generation
 
 ---
 
-# Additional Generated Outputs
+## Generated Artifacts
 
-Depending on the executed visualization and reporting components, HLI-01 can
-produce:
+Training and evaluation may generate artifacts including:
 
 ```text
-outputs/
-│
-├── checkpoints/
-│   └── best_model.pth
-│
-├── figures/
-│   ├── loss_curve.png
-│   ├── accuracy_curve.png
-│   └── learning_rate_curve.png
-│
-├── evaluation/
-│   ├── evaluation_results.txt
-│   └── confusion_matrix.npy
-│
-├── confusion_matrix/
-│   └── confusion_matrix.png
-│
-├── metrics/
-│   └── classification_metrics.png
-│
-├── predictions/
-│   └── prediction_summary.txt
-│
-├── reports/
-│   └── experiment_report.pdf
-│
-└── dashboard/
-    └── index.html
+outputs/checkpoints/best_model.pth
+outputs/figures/loss_curve.png
+outputs/figures/accuracy_curve.png
+outputs/figures/learning_rate_curve.png
+outputs/evaluation/evaluation_results.txt
+outputs/evaluation/confusion_matrix.npy
 ```
+
+These artifacts support experiment tracking, analysis, reporting, and
+reproducibility.
 
 ---
 
-# Project Structure
+## Project Structure
 
-The HLI-01 repository follows a modular `src/` architecture.
+The HLI-01 repository follows a modular structure similar to:
 
 ```text
 HLI-01/
 │
+├── configs/
 ├── dataset/
+├── docs/
+├── evaluation/
+├── experiments/
+├── outputs/
+├── paper/
 │
 ├── src/
-│   │
 │   ├── config/
-│   │   └── settings.py
-│   │
 │   ├── dataset/
-│   │
 │   ├── evaluation/
-│   │
+│   ├── inference/
 │   ├── models/
-│   │
 │   ├── preprocessing/
-│   │
-│   ├── registries/
-│   │
+│   ├── registry/
 │   ├── training/
-│   │
 │   └── visualization/
 │
 ├── tests/
-│   └── data/
 │
-├── outputs/
-│   ├── checkpoints/
-│   ├── evaluation/
-│   ├── figures/
-│   ├── confusion_matrix/
-│   ├── metrics/
-│   ├── predictions/
-│   ├── reports/
-│   └── dashboard/
-│
-├── train.py
-├── evaluate.py
-├── requirements.txt
-├── README.md
+├── .gitignore
 ├── CHANGELOG.md
-└── RELEASE_NOTES.md
+├── evaluate.py
+├── LICENSE.txt
+├── predict.py
+├── README.md
+├── RELEASE_NOTES.md
+├── requirements.txt
+├── train.py
+└── VERSION.txt
 ```
 
 ---
 
-# Installation
+## Environment
 
-## 1. Clone the Repository
+HLI-01 Version 0.9.0 is developed using Python and PyTorch.
 
-```bash
-git clone https://github.com/NassorAlly/HLI-01.git
-cd HLI-01
+The real-time inference environment has been validated with:
+
+```text
+MediaPipe             0.10.21
+OpenCV Contrib Python 4.11.0.86
+NumPy                 1.26.4
 ```
+
+These versions are pinned where necessary in `requirements.txt` to
+maintain compatibility with the real-time inference pipeline.
 
 ---
 
-## 2. Create a Virtual Environment
+## Installation
 
-### Windows
+Create and activate a Python virtual environment.
 
-```bash
+On Windows PowerShell:
+
+```powershell
 python -m venv .venv
-.venv\Scripts\activate
+.\.venv\Scripts\Activate.ps1
 ```
 
-### Linux / macOS
+Install the project dependencies:
 
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
+```powershell
+python -m pip install -r requirements.txt
 ```
 
----
+Check dependency compatibility:
 
-## 3. Install Dependencies
-
-```bash
-pip install -r requirements.txt
+```powershell
+python -m pip check
 ```
 
 ---
 
-## 4. Verify Python
+## Running Tests
 
-```bash
-python --version
+Run the complete automated regression suite from the project root:
+
+```powershell
+python -m pytest -q
 ```
 
-HLI-01 v0.8.0 has been developed and tested using Python 3.11.
-
----
-
-# Basic Usage
-
-A typical HLI-01 experiment can be executed using:
-
-```bash
-python train.py
-```
-
-followed by:
-
-```bash
-python evaluate.py
-```
-
-This provides the basic workflow:
+At the completion of Version 0.9.0 development, the regression suite
+reported:
 
 ```text
-Dataset
-   ↓
-Training
-   ↓
-Best Checkpoint
-   ↓
-Held-Out Test Evaluation
-   ↓
-Metrics and Evaluation Artifacts
+86 passed
 ```
 
----
+The automated tests cover major framework components including:
 
-# Running Tests
-
-Run the complete regression suite:
-
-```bash
-pytest -q
-```
-
-Final v0.8.0 regression result:
-
-```text
-69 passed
-```
-
-The final regression run completed with all tests passing.
-
-For detailed test names:
-
-```bash
-pytest -v
-```
-
----
-
-# Selected Component Tests
-
-Training engine:
-
-```bash
-python tests/test_trainer.py
-```
-
-Early stopping:
-
-```bash
-python tests/test_early_stopping.py
-```
-
-Checkpoint management:
-
-```bash
-python tests/test_checkpoint_manager.py
-```
-
-DataLoader management:
-
-```bash
-python tests/test_data_loader.py
-```
-
-Training visualization:
-
-```bash
-python tests/test_training_plots.py
-```
-
-Evaluation:
-
-```bash
-python tests/test_evaluator.py
-```
-
-Visualization pipeline:
-
-```bash
-python tests/test_visualization_pipeline.py
-```
-
----
-
-# Testing Coverage
-
-The current automated test suite verifies major components including:
-
-- Dataset collection
 - Dataset loading
 - Dataset validation
-- Dataset statistics
 - Dataset splitting
-- Label management
-- SignDataset
 - Preprocessing
-- Model components
-- Training engine
-- Early stopping
-- Checkpoint management
-- DataLoader management
-- Evaluation metrics
-- Confusion matrix
-- Training plots
-- Metrics plots
-- Prediction visualization
-- Experiment reports
-- Dashboard generation
-- Visualization pipeline integration
-
-At the completion of Version 0.8.0:
-
-```text
-69 tests passed
-```
-
----
-
-# Version History
-
-## Version 0.5.0 — Visualization System
-
-Introduced the visualization and experiment-reporting subsystem.
-
-Major additions included:
-
-- Training visualization
-- Confusion matrix visualization
-- Classification metrics visualization
-- Prediction summaries
-- PDF experiment reports
-- HTML dashboard
-
----
-
-## Version 0.6.0 — Core Framework
-
-Introduced the modular software-engineering architecture.
-
-Major additions included:
-
-- Standardized `src/` architecture
-- Registry framework
-- Evaluation framework
-- Visualization framework
-- Model infrastructure
-- Automated regression testing
-
----
-
-## Version 0.7.0 — Data Pipeline
-
-Introduced the structured data-processing subsystem.
-
-Major additions included:
-
-- Dataset collection
-- Dataset loading
-- Dataset validation
 - Dataset statistics
 - Label management
-- Stratified splitting
-- PyTorch dataset integration
-- Preprocessing pipeline
-- DataLoader management
-
----
-
-## Version 0.8.0 — Training Pipeline
-
-Introduces the complete training and test-evaluation workflow.
-
-Major additions include:
-
-- Training engine
-- Validation tracking
+- Models
+- Forward passes
+- Training
 - Early stopping
-- Best-model checkpointing
-- Resume-training support
 - Learning-rate scheduling
-- Training-history management
-- Automatic training plots
-- Centralized training configuration
-- Held-out test evaluation
-- Persistent evaluation artifacts
-
-Official held-out test accuracy:
-
-```text
-98.33%
-```
+- Checkpoint management
+- Resume training
+- Evaluation
+- Metrics
+- Visualization
+- Predictor behavior
+- Inference input validation
+- Real-time inference utilities
 
 ---
 
-# Roadmap
+## Reproducibility
 
-Development after v0.8.0 will continue toward a research-ready Version 1.0.0.
-
-Potential future milestones include:
-
-### Experiment Infrastructure
-
-- Structured experiment management
-- Experiment metadata
-- Configuration snapshots
-- Reproducibility tracking
-- Model comparison
-
-### Inference
-
-- Dedicated inference pipeline
-- Single-sequence prediction
-- Confidence reporting
-- Real-time recognition support
-
-### Model Research
-
-- Additional recurrent architectures
-- Attention-based architectures
-- Model comparison experiments
-- Hyperparameter experiments
-- Ablation studies
-
-### Research Evaluation
-
-- Per-class metrics
-- Classification reports
-- Additional evaluation visualizations
-- Cross-validation experiments
-- Statistical model comparison
-
-### Deployment Research
-
-- TorchScript
-- ONNX export
-- Model optimization
-- Real-time performance analysis
-
-### Version 1.0.0
-
-The Version 1.0.0 milestone is intended to represent a stable,
-research-ready HLI-01 framework suitable for systematic experiments and
-publication-oriented studies.
-
----
-
-# Reproducibility
-
-HLI-01 is designed around reproducible experimentation.
-
-Current reproducibility mechanisms include:
+HLI-01 incorporates several mechanisms to support reproducible
+experimentation:
 
 - Centralized configuration
-- Fixed dataset-splitting seed
-- Stratified splitting
-- Explicit train-validation-test separation
-- Saved best-model checkpoint
-- Saved optimizer state
-- Training-history tracking
-- Persisted evaluation results
-- Persisted confusion matrix
+- Fixed random-seed configuration
+- Stratified dataset splitting
+- Explicit train/validation/test separation
+- Best-model checkpointing
+- Versioned source code
+- Versioned dependency configuration
 - Automated regression testing
-
-Future releases will extend experiment metadata and configuration tracking.
-
----
-
-# Citation
-
-If you use HLI-01 in academic research, please cite the corresponding HLI-01
-publication when available.
-
-Formal publication citation information will be added after publication.
+- Persistent evaluation artifacts
+- Version-specific release notes
+- Project changelog
 
 ---
 
-# License
+## Current Status
 
-This project is released under the MIT License.
+HLI-01 Version 0.9.0 provides an operational pipeline covering:
+
+```text
+Dataset Collection
+        ↓
+Dataset Validation
+        ↓
+Preprocessing
+        ↓
+Dataset Splitting
+        ↓
+Model Construction
+        ↓
+Training
+        ↓
+Validation
+        ↓
+Checkpointing
+        ↓
+Held-Out Evaluation
+        ↓
+Offline Inference
+        ↓
+Real-Time Webcam Inference
+```
+
+Current development status:
+
+- Dataset pipeline: Operational
+- Model architecture: Operational
+- Training pipeline: Operational
+- Evaluation pipeline: Operational
+- Checkpoint management: Operational
+- Offline inference: Operational
+- Real-time webcam inference: Operational
+- Automated regression suite: 86 tests passing
+
+Version 1.0.0 remains the next planned milestone.
 
 ---
 
-# Acknowledgements
+## Version History
 
-HLI-01 builds on open-source scientific and machine-learning technologies,
-including:
+### Version 0.5.0
 
-- PyTorch
-- MediaPipe
-- OpenCV
-- NumPy
-- Matplotlib
-- Scikit-learn
-- ReportLab
-- Pytest
+**Theme:** Visualization System
+
+Established the visualization and experiment-output infrastructure.
+
+### Version 0.6.0
+
+**Theme:** Building the Core Framework
+
+Established the modular framework architecture, evaluation utilities,
+visualization framework, model infrastructure, and automated testing.
+
+### Version 0.7.0
+
+**Theme:** Building the Data Pipeline
+
+Introduced dataset collection, loading, validation, stratified
+splitting, preprocessing, statistics, label management, and PyTorch
+dataset integration.
+
+### Version 0.8.0
+
+**Theme:** Building the Training Pipeline
+
+Introduced the complete training, validation, checkpointing,
+learning-rate scheduling, early-stopping, resume-training, and
+held-out evaluation pipeline.
+
+Historical held-out test performance:
+
+- Accuracy: 98.33%
+- Weighted Precision: 98.44%
+- Weighted Recall: 98.33%
+- Weighted F1-score: 98.33%
+
+### Version 0.9.0
+
+**Theme:** Real-Time Inference Pipeline
+
+Introduced reusable prediction, trained-checkpoint inference,
+MediaPipe-based hand-landmark extraction, webcam-based real-time
+recognition, live confidence reporting, inference validation, and
+expanded automated testing.
+
+Current automated regression status:
+
+```text
+86 tests passed
+```
 
 ---
 
-# Author
+## Next Milestone
+
+### Version 1.0.0 — Research-Ready Framework
+
+The next development milestone will focus on comprehensive validation,
+real-time performance characterization, robustness analysis,
+reproducibility verification, publication-quality outputs, and final
+research documentation.
+
+Version 1.0.0 is planned and has not yet been released.
+
+---
+
+## HLI-01 Development Path
+
+Version 0.5.0  
+**Visualization System**
+
+↓
+
+Version 0.6.0  
+**Core Framework**
+
+↓
+
+Version 0.7.0  
+**Data Pipeline**
+
+↓
+
+Version 0.8.0  
+**Training Pipeline**
+
+↓
+
+Version 0.9.0  
+**Real-Time Inference Pipeline — CURRENT RELEASE**
+
+↓
+
+Version 1.0.0  
+**Research-Ready Framework — NEXT MILESTONE**
+
+---
+
+## License
+
+HLI-01 is released under the MIT License.
+
+See:
+
+```text
+LICENSE.txt
+```
+
+for the complete license terms.
+
+---
+
+## Author
 
 **Dr. Nassor Ally Nassor**
 
-Department of Electronics and Telecommunication Engineering  
-College of Information and Communication Technologies (CoICT)  
-University of Dar es Salaam
+HLI-01 Sign Language Recognition Framework
 
 ---
 
-**HLI-01 Version 0.8.0**
+## Citation
 
-*Building the Training Pipeline*
+A formal research citation will be provided with the research-ready
+Version 1.0.0 release and associated publications.
