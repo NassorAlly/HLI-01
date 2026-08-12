@@ -1,0 +1,25 @@
+# ==========================================================
+# HLI-01 Version 1.0.0
+# Default Experiment Configuration
+# Research-Ready Framework
+# ==========================================================
+
+project:
+  name: "HLI-01"
+  version: "1.0.0"
+  description: "Research-Ready Sign Language Recognition Framework"
+
+experiment:
+  name: "baseline"
+  seed: 42
+
+paths:
+  dataset: "dataset"
+  outputs: "outputs"
+  checkpoints: "outputs/checkpoints"
+  figures: "outputs/figures"
+  experiments: "outputs/experiments"
+
+system:
+  device: "cpu"
+  deterministic: true

@@ -1,0 +1,31 @@
+# ==========================================================
+# HLI-01 Version 1.0.0
+# Dataset Configuration
+# ==========================================================
+
+dataset:
+  path: "dataset"
+
+  sequence_length: 30
+  num_features: 63
+  num_classes: 4
+
+  class_names:
+    - "hello"
+    - "no"
+    - "peace"
+    - "yes"
+
+split:
+  train_ratio: 0.70
+  validation_ratio: 0.15
+  test_ratio: 0.15
+
+  random_seed: 42
+  stratified: true
+
+loader:
+  batch_size: 32
+  shuffle_train: true
+  shuffle_validation: false
+  shuffle_test: false

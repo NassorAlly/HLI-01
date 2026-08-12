@@ -1,0 +1,33 @@
+# ==========================================================
+# HLI-01 Version 1.0.0
+# Training Configuration
+# ==========================================================
+
+training:
+  epochs: 50
+  batch_size: 32
+  learning_rate: 0.001
+
+  optimizer:
+    name: "Adam"
+
+  loss:
+    name: "CrossEntropyLoss"
+
+  early_stopping:
+    enabled: true
+    patience: 10
+    min_delta: 0.0
+
+  scheduler:
+    enabled: true
+    factor: 0.5
+    patience: 5
+
+checkpoint:
+  save_best_only: true
+  directory: "outputs/checkpoints"
+
+reproducibility:
+  seed: 42
+  deterministic: true

@@ -33,6 +33,7 @@ class Trainer:
         device,
         epochs=30,
         scheduler=None,
+        checkpoint_dir="outputs/checkpoints",
     ):
 
         self.model = model
@@ -50,7 +51,9 @@ class Trainer:
             min_delta=EARLY_STOPPING_MIN_DELTA,
         )
 
-        self.checkpoints = CheckpointManager()
+        self.checkpoints = CheckpointManager(
+            checkpoint_dir=checkpoint_dir
+        )
 
         self.history = {
             "train_loss": [],
