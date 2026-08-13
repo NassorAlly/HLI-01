@@ -111,3 +111,76 @@ def test_experiment_report():
 
 if __name__ == "__main__":
     test_experiment_report()
+
+
+def test_experiment_report_with_comparison_figure(tmp_path):
+    import matplotlib.pyplot as plt
+
+    comparison_path = tmp_path / "comparison.png"
+
+    fig, ax = plt.subplots()
+    ax.bar(
+        ["LSTM", "BiLSTM"],
+        [0.90, 0.95],
+    )
+    fig.savefig(comparison_path)
+    plt.close(fig)
+
+    generator = ExperimentReportGenerator(
+        save_dir=tmp_path,
+    )
+
+    prediction = {
+        "ground_truth": "peace",
+        "prediction": "peace",
+        "confidence": 99.31,
+        "status": "✓ Correct",
+    }
+
+    report = generator.generate(
+        model_name="BiLSTM + Attention",
+        dataset_name="HLI-01 Dataset",
+        num_classes=4,
+        accuracy=98.20,
+        macro_f1=97.80,
+        prediction_summary=prediction,
+        comparison_figure=comparison_path,
+        filename="experiment_report_with_comparison.pdf",
+    )
+
+    assert os.path.exists(report)
+    assert os.path.isfile(report)
+    assert os.path.getsize(report) > 0
+
+
+def test_experiment_report_rejects_missing_comparison_figure(tmp_path):
+    generator = ExperimentReportGenerator(
+        save_dir=tmp_path,
+    )
+
+    prediction = {
+        "ground_truth": "peace",
+        "prediction": "peace",
+        "confidence": 99.31,
+        "status": "✓ Correct",
+    }
+
+    missing_figure = tmp_path / "missing_comparison.png"
+
+    try:
+        generator.generate(
+            model_name="BiLSTM + Attention",
+            dataset_name="HLI-01 Dataset",
+            num_classes=4,
+            accuracy=98.20,
+            macro_f1=97.80,
+            prediction_summary=prediction,
+            comparison_figure=missing_figure,
+            filename="should_not_generate.pdf",
+        )
+    except FileNotFoundError as error:
+        assert "Comparison figure not found" in str(error)
+    else:
+        raise AssertionError(
+            "Expected FileNotFoundError for missing comparison figure."
+        )
