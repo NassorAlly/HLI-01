@@ -1,11 +1,12 @@
 """
 =========================================================
-HLI-01 Version 0.7.0
+HLI-01 Version 1.0.0
 Visualization Dashboard
 =========================================================
 """
 
 import os
+from pathlib import Path
 
 from .visualization_utils import create_directory
 
@@ -13,12 +14,13 @@ from .visualization_utils import create_directory
 class DashboardGenerator:
     """
     Generates an HTML dashboard for experiment visualization.
+
+    Supports an optional experiment comparison figure while
+    preserving compatibility with earlier HLI-01 versions.
     """
 
     def __init__(self, save_dir="outputs/dashboard"):
-
         self.save_dir = save_dir
-
         create_directory(self.save_dir)
 
     def generate(
@@ -27,13 +29,37 @@ class DashboardGenerator:
         dataset_name,
         accuracy,
         macro_f1,
-        filename="index.html"
+        filename="index.html",
+        comparison_figure=None,
     ):
-
         filepath = os.path.join(
             self.save_dir,
-            filename
+            filename,
         )
+
+        comparison_section = ""
+
+        if comparison_figure is not None:
+            comparison_figure = Path(
+                comparison_figure
+            )
+
+            if not comparison_figure.exists():
+                raise FileNotFoundError(
+                    f"Comparison figure not found: "
+                    f"{comparison_figure}"
+                )
+
+            comparison_section = f"""
+<div class="card">
+
+<h2>Experiment Comparison</h2>
+
+<img src="{comparison_figure.name}"
+     alt="Experiment Comparison">
+
+</div>
+"""
 
         html = f"""
 <!DOCTYPE html>
@@ -122,9 +148,11 @@ border-bottom:1px solid #ddd;
 
 <h2>Training Curves</h2>
 
-<img src="../figures/loss_curve.png">
+<img src="../figures/loss_curve.png"
+     alt="Loss Curve">
 
-<img src="../figures/accuracy_curve.png">
+<img src="../figures/accuracy_curve.png"
+     alt="Accuracy Curve">
 
 </div>
 
@@ -132,7 +160,8 @@ border-bottom:1px solid #ddd;
 
 <h2>Confusion Matrix</h2>
 
-<img src="../confusion_matrix/confusion_matrix.png">
+<img src="../confusion_matrix/confusion_matrix.png"
+     alt="Confusion Matrix">
 
 </div>
 
@@ -140,9 +169,12 @@ border-bottom:1px solid #ddd;
 
 <h2>Classification Metrics</h2>
 
-<img src="../metrics/classification_metrics.png">
+<img src="../metrics/classification_metrics.png"
+     alt="Classification Metrics">
 
 </div>
+
+{comparison_section}
 
 <div class="card">
 
@@ -173,10 +205,8 @@ Open PDF Report
         with open(
             filepath,
             "w",
-            encoding="utf-8"
+            encoding="utf-8",
         ) as file:
-
             file.write(html)
 
         return filepath
-
