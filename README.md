@@ -157,7 +157,7 @@ Version 0.8.0 held-out test performance:
 
 ### Version 0.9.0 — Real-Time Inference Pipeline
 
-**CURRENT RELEASE**
+**PREVIOUS RELEASE**
 
 Version 0.9.0 extends HLI-01 from model development and training into
 an operational real-time sign-language recognition framework.
@@ -213,28 +213,24 @@ Automated regression status:
 
 ### Version 1.0.0 — Research-Ready Framework
 
-**NEXT MILESTONE — PLANNED**
+**CURRENT RELEASE**
 
-Version 1.0.0 will focus on transforming the operational HLI-01
-prototype into a fully validated, reproducible, and publication-ready
-research framework.
+Version 1.0.0 transforms HLI-01 into a reproducible and
+research-ready experimental framework.
 
-Planned priorities include:
+Version 1.0.0 includes:
 
-- Comprehensive held-out test evaluation
-- Per-class precision, recall, and F1-score analysis
-- Final confusion-matrix analysis
-- Real-time inference performance evaluation
-- Latency measurement
-- Frames-per-second (FPS) measurement
-- Robustness testing
-- Testing across users, backgrounds, and lighting conditions
-- Reproducibility verification
-- Final experiment artifacts
-- Publication-quality figures and tables
-- Final technical documentation
-- Research experiment reporting
-- Stable Version 1.0.0 release
+- Reproducible experiment initialization
+- Experiment metadata and logging
+- Research metrics
+- Model comparison
+- Ablation support
+- Experiment aggregation
+- CSV comparison export
+- Publication-oriented experiment comparison visualization
+- Comparison integration into the PDF research report
+- Comparison integration into the HTML dashboard
+- Automated regression testing with 126 tests passing
 
 ---
 
@@ -722,7 +718,7 @@ experimentation:
 
 ## Current Status
 
-HLI-01 Version 0.9.0 provides an operational pipeline covering:
+HLI-01 Version 1.0.0 provides a research-ready pipeline covering:
 
 ```text
 Dataset Collection
@@ -757,9 +753,9 @@ Current development status:
 - Checkpoint management: Operational
 - Offline inference: Operational
 - Real-time webcam inference: Operational
-- Automated regression suite: 86 tests passing
+- Automated regression suite: 126 tests passing
 
-Version 1.0.0 remains the next planned milestone.
+Version 1.0.0 is the current research-ready release.
 
 ---
 
@@ -810,7 +806,7 @@ MediaPipe-based hand-landmark extraction, webcam-based real-time
 recognition, live confidence reporting, inference validation, and
 expanded automated testing.
 
-Current automated regression status:
+Historical automated regression status:
 
 ```text
 86 tests passed
@@ -818,16 +814,14 @@ Current automated regression status:
 
 ---
 
-## Next Milestone
+## Current Release
 
 ### Version 1.0.0 — Research-Ready Framework
 
-The next development milestone will focus on comprehensive validation,
-real-time performance characterization, robustness analysis,
-reproducibility verification, publication-quality outputs, and final
-research documentation.
-
-Version 1.0.0 is planned and has not yet been released.
+Version 1.0.0 establishes the research-ready HLI-01 framework with
+reproducible experiment management, research metrics, model comparison,
+experiment aggregation, research visualization, PDF reporting, and
+HTML dashboard integration.
 
 ---
 
@@ -853,13 +847,13 @@ Version 0.8.0
 
 ↓
 
-Version 0.9.0  
-**Real-Time Inference Pipeline — CURRENT RELEASE**
+Version 0.9.0
+**Real-Time Inference Pipeline**
 
 ↓
 
-Version 1.0.0  
-**Research-Ready Framework — NEXT MILESTONE**
+Version 1.0.0
+**Research-Ready Framework — CURRENT RELEASE**
 
 ---
 
@@ -887,5 +881,5 @@ HLI-01 Sign Language Recognition Framework
 
 ## Citation
 
-A formal research citation will be provided with the research-ready
-Version 1.0.0 release and associated publications.
+A formal research citation will be provided with associated HLI-01
+research publications.

@@ -1,7 +1,7 @@
 """
-Transformer model.
+Transformer model placeholder.
 
-Implementation will be added in Version 0.4.
+The Transformer architecture is reserved for future development and is not implemented in Version 1.0.0.
 """
 
 from .base_model import BaseModel
