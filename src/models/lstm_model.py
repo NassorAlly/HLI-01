@@ -37,6 +37,7 @@ class LSTMModel(BaseModel):
         num_layers,
         num_classes,
         dropout=0.3,
+        use_attention=True,
     ):
 
         super().__init__()
@@ -50,7 +51,12 @@ class LSTMModel(BaseModel):
             dropout=dropout,
         )
 
-        self.attention = Attention(hidden_size)
+        self.use_attention = use_attention
+
+        if self.use_attention:
+            self.attention = Attention(hidden_size)
+        else:
+            self.attention = None
 
         self.dropout = nn.Dropout(dropout)
 
@@ -63,7 +69,10 @@ class LSTMModel(BaseModel):
 
         outputs, _ = self.lstm(x)
 
-        context = self.attention(outputs)
+        if self.use_attention:
+            context = self.attention(outputs)
+        else:
+            context = outputs[:, -1, :]
 
         context = self.dropout(context)
 
@@ -71,4 +80,7 @@ class LSTMModel(BaseModel):
 
     def get_model_name(self):
 
-        return "BiLSTM_Attention"
+        if self.use_attention:
+            return "BiLSTM_Attention"
+
+        return "BiLSTM_NoAttention"
