@@ -1,0 +1,212 @@
+{
+    "experiment_id": "EXP-002",
+    "description": "Multi-seed validation of HLI-01 v1.0.0",
+    "seeds": [
+        42,
+        7,
+        21,
+        84,
+        123
+    ],
+    "number_of_runs": 5,
+    "runs": [
+        {
+            "experiment": "EXP_20260820_003057_multiseed_seed_42",
+            "seed": 42,
+            "test_accuracy": 1.0,
+            "test_precision": 1.0,
+            "test_recall": 1.0,
+            "test_f1_score": 1.0,
+            "best_epoch": 25,
+            "best_validation_loss": 0.006401970400474966,
+            "confusion_matrix": [
+                [
+                    15,
+                    0,
+                    0,
+                    0
+                ],
+                [
+                    0,
+                    15,
+                    0,
+                    0
+                ],
+                [
+                    0,
+                    0,
+                    15,
+                    0
+                ],
+                [
+                    0,
+                    0,
+                    0,
+                    15
+                ]
+            ]
+        },
+        {
+            "experiment": "EXP_20260820_003130_multiseed_seed_7",
+            "seed": 7,
+            "test_accuracy": 1.0,
+            "test_precision": 1.0,
+            "test_recall": 1.0,
+            "test_f1_score": 1.0,
+            "best_epoch": 49,
+            "best_validation_loss": 0.003939108224585652,
+            "confusion_matrix": [
+                [
+                    15,
+                    0,
+                    0,
+                    0
+                ],
+                [
+                    0,
+                    15,
+                    0,
+                    0
+                ],
+                [
+                    0,
+                    0,
+                    15,
+                    0
+                ],
+                [
+                    0,
+                    0,
+                    0,
+                    15
+                ]
+            ]
+        },
+        {
+            "experiment": "EXP_20260820_003207_multiseed_seed_21",
+            "seed": 21,
+            "test_accuracy": 0.9833333333333333,
+            "test_precision": 0.984375,
+            "test_recall": 0.9833333333333333,
+            "test_f1_score": 0.9833147942157954,
+            "best_epoch": 19,
+            "best_validation_loss": 0.051154182292521,
+            "confusion_matrix": [
+                [
+                    15,
+                    0,
+                    0,
+                    0
+                ],
+                [
+                    1,
+                    14,
+                    0,
+                    0
+                ],
+                [
+                    0,
+                    0,
+                    15,
+                    0
+                ],
+                [
+                    0,
+                    0,
+                    0,
+                    15
+                ]
+            ]
+        },
+        {
+            "experiment": "EXP_20260820_003236_multiseed_seed_84",
+            "seed": 84,
+            "test_accuracy": 0.9833333333333333,
+            "test_precision": 0.984375,
+            "test_recall": 0.9833333333333333,
+            "test_f1_score": 0.9833147942157954,
+            "best_epoch": 50,
+            "best_validation_loss": 0.006819642847403884,
+            "confusion_matrix": [
+                [
+                    14,
+                    1,
+                    0,
+                    0
+                ],
+                [
+                    0,
+                    15,
+                    0,
+                    0
+                ],
+                [
+                    0,
+                    0,
+                    15,
+                    0
+                ],
+                [
+                    0,
+                    0,
+                    0,
+                    15
+                ]
+            ]
+        },
+        {
+            "experiment": "EXP_20260820_003323_multiseed_seed_123",
+            "seed": 123,
+            "test_accuracy": 1.0,
+            "test_precision": 1.0,
+            "test_recall": 1.0,
+            "test_f1_score": 1.0,
+            "best_epoch": 25,
+            "best_validation_loss": 0.08103097719140351,
+            "confusion_matrix": [
+                [
+                    15,
+                    0,
+                    0,
+                    0
+                ],
+                [
+                    0,
+                    15,
+                    0,
+                    0
+                ],
+                [
+                    0,
+                    0,
+                    15,
+                    0
+                ],
+                [
+                    0,
+                    0,
+                    0,
+                    15
+                ]
+            ]
+        }
+    ],
+    "aggregate": {
+        "test_accuracy": {
+            "mean": 0.9933333333333333,
+            "std": 0.009128709291752798
+        },
+        "test_precision": {
+            "mean": 0.99375,
+            "std": 0.00855816496101822
+        },
+        "test_recall": {
+            "mean": 0.9933333333333333,
+            "std": 0.009128709291752798
+        },
+        "test_f1_score": {
+            "mean": 0.9933259176863182,
+            "std": 0.009138863584624549
+        }
+    }
+}
