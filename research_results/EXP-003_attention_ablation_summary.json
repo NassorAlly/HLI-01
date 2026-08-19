@@ -1,0 +1,88 @@
+{
+    "experiment_id": "EXP-003",
+    "description": "Controlled attention ablation for HLI-01 v1.0.0",
+    "seed": 42,
+    "comparison": {
+        "attention_on": {
+            "experiment": "EXP_20260820_010936_exp003_attention_on",
+            "use_attention": true,
+            "test_accuracy": 1.0,
+            "test_precision": 1.0,
+            "test_recall": 1.0,
+            "test_f1_score": 1.0,
+            "best_epoch": 25,
+            "best_validation_loss": 0.006401970400474966,
+            "epochs_completed": 35,
+            "confusion_matrix": [
+                [
+                    15,
+                    0,
+                    0,
+                    0
+                ],
+                [
+                    0,
+                    15,
+                    0,
+                    0
+                ],
+                [
+                    0,
+                    0,
+                    15,
+                    0
+                ],
+                [
+                    0,
+                    0,
+                    0,
+                    15
+                ]
+            ]
+        },
+        "attention_off": {
+            "experiment": "EXP_20260820_010941_exp003_attention_off",
+            "use_attention": false,
+            "test_accuracy": 1.0,
+            "test_precision": 1.0,
+            "test_recall": 1.0,
+            "test_f1_score": 1.0,
+            "best_epoch": 50,
+            "best_validation_loss": 0.0013853941927663982,
+            "epochs_completed": 50,
+            "confusion_matrix": [
+                [
+                    15,
+                    0,
+                    0,
+                    0
+                ],
+                [
+                    0,
+                    15,
+                    0,
+                    0
+                ],
+                [
+                    0,
+                    0,
+                    15,
+                    0
+                ],
+                [
+                    0,
+                    0,
+                    0,
+                    15
+                ]
+            ]
+        }
+    },
+    "delta_on_minus_off": {
+        "test_accuracy": 0.0,
+        "test_precision": 0.0,
+        "test_recall": 0.0,
+        "test_f1_score": 0.0,
+        "best_validation_loss": 0.005016576207708567
+    }
+}
