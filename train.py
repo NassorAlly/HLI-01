@@ -560,6 +560,13 @@ def run_training(
             final_lr
         ),
         "device": str(device),
+        "runtime_config": {
+            "epochs": epochs,
+            "learning_rate": LEARNING_RATE,
+            "scheduler_factor": LR_SCHEDULER_FACTOR,
+            "scheduler_patience": LR_SCHEDULER_PATIENCE,
+            "seed": seed,
+        },
         "checkpoint_path": str(
             checkpoint_path
         ),
