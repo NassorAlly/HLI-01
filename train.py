@@ -57,6 +57,7 @@ def run_training(
     figure_dir=None,
     seed=RANDOM_SEED,
     epochs=NUM_EPOCHS,
+    use_attention=True,
 ):
     """
     Run the complete HLI-01 training pipeline.
@@ -75,6 +76,9 @@ def run_training(
 
     epochs : int
         Maximum number of training epochs.
+
+    use_attention : bool
+        Whether to use the attention mechanism.
 
     Returns
     -------
@@ -181,6 +185,11 @@ def run_training(
         LR_SCHEDULER_PATIENCE,
     )
 
+    print(
+        "Use attention     :",
+        use_attention,
+    )
+
     # --------------------------------------------------
     # Dataset
     # --------------------------------------------------
@@ -228,6 +237,7 @@ def run_training(
         hidden_size=HIDDEN_SIZE,
         num_layers=NUM_LAYERS,
         num_classes=NUM_CLASSES,
+        use_attention=use_attention,
     )
 
     model = model.to(device)
@@ -566,6 +576,7 @@ def run_training(
             "scheduler_factor": LR_SCHEDULER_FACTOR,
             "scheduler_patience": LR_SCHEDULER_PATIENCE,
             "seed": seed,
+            "use_attention": use_attention,
         },
         "checkpoint_path": str(
             checkpoint_path
