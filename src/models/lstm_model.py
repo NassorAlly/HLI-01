@@ -67,12 +67,18 @@ class LSTMModel(BaseModel):
 
     def forward(self, x):
 
-        outputs, _ = self.lstm(x)
+        outputs, (hidden, _) = self.lstm(x)
 
         if self.use_attention:
             context = self.attention(outputs)
         else:
-            context = outputs[:, -1, :]
+            forward_final = hidden[-2]
+            backward_final = hidden[-1]
+
+            context = torch.cat(
+                (forward_final, backward_final),
+                dim=1,
+            )
 
         context = self.dropout(context)
 
