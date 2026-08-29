@@ -31,3 +31,6 @@ htmlcov/
 # OS files
 .DS_Store
 Thumbs.db
+# EXP-011 raw video recordings
+exp011_recordings/
+exp011_controlled_recordings/
