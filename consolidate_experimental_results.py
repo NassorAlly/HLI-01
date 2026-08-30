@@ -5,7 +5,7 @@ HLI-01 v1.0.0
 Experimental Results Consolidation
 
 Consolidates the validated results from EXP-001
-through EXP-010 into a single research-ready
+through EXP-012 into a single research-ready
 results package.
 
 The script reads existing experiment outputs and
@@ -50,14 +50,49 @@ def main():
     print("Experiment root :", EXPERIMENT_ROOT)
     print("Output root     :", OUTPUT_ROOT)
 
-    print()
-    print(
-        "Consolidation module initialized successfully."
+    validate_result_files()
+
+    master = build_master_summary()
+
+    table_rows = build_master_table(
+        master
     )
 
+    saved = save_master_results(
+        master,
+        table_rows,
+    )
 
-if __name__ == "__main__":
-    main()
+    markdown_path = save_markdown_summary(
+        master,
+        table_rows,
+    )
+
+    print()
+    print(
+        "Validated experiments :",
+        master["number_of_experiments"],
+    )
+
+    print(
+        "Master JSON           :",
+        saved["json"],
+    )
+
+    print(
+        "Master CSV            :",
+        saved["csv"],
+    )
+
+    print(
+        "Markdown summary      :",
+        markdown_path,
+    )
+
+    print()
+    print(
+        "Consolidation completed successfully."
+    )
 
 
 AUTHORITATIVE_RESULTS = {
@@ -100,6 +135,16 @@ AUTHORITATIVE_RESULTS = {
         EXPERIMENT_ROOT
         / "EXP_20260827_233944_exp010_inference_efficiency"
         / "exp010_efficiency_summary.json"
+    ),
+    "EXP-011": (
+        EXPERIMENT_ROOT
+        / "EXP_20260829_215013_exp011_realtime_recovery"
+        / "exp011_summary.json"
+    ),
+    "EXP-012": (
+        EXPERIMENT_ROOT
+        / "EXP_20260830_044455_exp012_controlled_interruption"
+        / "exp012_summary.json"
     ),
 }
 
@@ -503,9 +548,129 @@ def consolidate_exp010():
     }
 
 
+def consolidate_exp011():
+    """
+    Consolidate EXP-011 end-to-end real-time
+    temporal recovery validation.
+    """
+
+    data = load_json(
+        AUTHORITATIVE_RESULTS["EXP-011"]
+    )
+
+    return {
+        "experiment":
+            "EXP-011",
+
+        "title":
+            data["title"],
+
+        "category":
+            "real_time_validation",
+
+        "device":
+            data["device"],
+
+        "recordings":
+            data["recordings"],
+
+        "classes":
+            data["classes"],
+
+        "recordings_per_class":
+            data["recordings_per_class"],
+
+        "frames_per_recording":
+            data["frames_per_recording"],
+
+        "confidence_threshold":
+            data["confidence_threshold"],
+
+        "sequence_length":
+            data["sequence_length"],
+
+        "natural_detection_statistics":
+            data[
+                "natural_detection_statistics"
+            ],
+
+        "full_reset":
+            data["full_reset"],
+
+        "two_miss_tolerance":
+            data[
+                "two_miss_tolerance"
+            ],
+
+        "paired_comparison":
+            data["paired_comparison"],
+    }
+
+
+def consolidate_exp012():
+    """
+    Consolidate EXP-012 controlled end-to-end
+    interruption challenge.
+    """
+
+    data = load_json(
+        AUTHORITATIVE_RESULTS["EXP-012"]
+    )
+
+    return {
+        "experiment":
+            "EXP-012",
+
+        "title":
+            data["title"],
+
+        "category":
+            "real_time_robustness",
+
+        "device":
+            data["device"],
+
+        "source_dataset":
+            data["source_dataset"],
+
+        "recordings":
+            data["recordings"],
+
+        "challenge_conditions":
+            data["challenge_conditions"],
+
+        "video_condition_runs":
+            data["video_condition_runs"],
+
+        "classes":
+            data["classes"],
+
+        "recordings_per_class":
+            data["recordings_per_class"],
+
+        "frames_per_recording":
+            data["frames_per_recording"],
+
+        "confidence_threshold":
+            data["confidence_threshold"],
+
+        "sequence_length":
+            data["sequence_length"],
+
+        "challenge_start_frame":
+            data["challenge_start_frame"],
+
+        "methodological_controls":
+            data["methodological_controls"],
+
+        "conditions":
+            data["conditions"],
+    }
+
+
 def build_master_summary():
     """
-    Build the complete EXP-001 to EXP-010 master summary.
+    Build the complete EXP-001 to EXP-012 master summary.
     """
 
     experiments = [
@@ -519,6 +684,8 @@ def build_master_summary():
         consolidate_exp008(),
         consolidate_exp009(),
         consolidate_exp010(),
+        consolidate_exp011(),
+        consolidate_exp012(),
     ]
 
     return {
@@ -527,7 +694,7 @@ def build_master_summary():
         "description":
             (
                 "Master experimental validation summary "
-                "for EXP-001 through EXP-010"
+                "for EXP-001 through EXP-012"
             ),
         "number_of_experiments":
             len(experiments),
@@ -666,6 +833,55 @@ def build_master_table(master):
                 f"{cuda['raw_model']['mean_ms']:.4f} ms"
             )
 
+        elif experiment == "EXP-011":
+            detection = exp[
+                "natural_detection_statistics"
+            ]
+
+            result = (
+                f"Natural detection rate="
+                f"{detection['mean_detection_rate']:.4f}; "
+                f"video accuracy="
+                f"{exp['full_reset']['video_raw_accuracy']:.4f}; "
+                f"paired prediction gain="
+                f"{exp['paired_comparison']['mean_prediction_gain']:+.4f}"
+            )
+
+        elif experiment == "EXP-012":
+            one_frame = exp[
+                "conditions"
+            ][
+                "dropout_1_frame"
+            ][
+                "paired_comparison"
+            ]
+
+            two_frames = exp[
+                "conditions"
+            ][
+                "dropout_2_frames"
+            ][
+                "paired_comparison"
+            ]
+
+            three_frames = exp[
+                "conditions"
+            ][
+                "dropout_3_frames"
+            ][
+                "paired_comparison"
+            ]
+
+            result = (
+                f"Recovery advantage="
+                f"{one_frame['mean_recovery_delay_reduction']:+.0f} "
+                f"frames at 1-frame dropout; "
+                f"{two_frames['mean_recovery_delay_reduction']:+.0f} "
+                f"at 2-frame dropout; "
+                f"{three_frames['mean_recovery_delay_reduction']:+.0f} "
+                f"at 3-frame dropout"
+            )
+
         else:
             result = ""
 
@@ -771,7 +987,7 @@ def save_markdown_summary(
         (
             "This document consolidates the validated "
             "experimental evidence from EXP-001 through "
-            "EXP-010."
+            "EXP-012."
         ),
         "",
         "## Master Results",
@@ -844,24 +1060,65 @@ def save_markdown_summary(
                 "CPU and CUDA under the tested environment."
             ),
             "",
-            "## Interpretation",
-            "",
             (
-                "The combined evidence suggests that HLI-01 "
-                "has a highly accurate and computationally "
-                "efficient classifier, with strong tolerance "
-                "to moderate coordinate and temporal "
-                "perturbations. The more pronounced weakness "
-                "lies in the real-time temporal acquisition "
-                "policy rather than the classifier itself."
+                "8. EXP-011 evaluated the complete real-time "
+                "pipeline on 40 controlled raw recordings. "
+                "Mean MediaPipe landmark-detection rate was "
+                "99.77%, and video-level classification "
+                "accuracy was 100%. Natural detection "
+                "interruptions were too rare, and occurred "
+                "before temporal buffer accumulation, to "
+                "differentiate the two recovery policies."
             ),
             "",
             (
-                "The two-miss temporal recovery strategy is "
-                "therefore a promising design candidate for "
-                "future real-time inference refinement, "
-                "subject to validation on longer raw "
-                "real-time recordings."
+                "9. EXP-012 introduced deterministic visual "
+                "dropouts before MediaPipe processing after "
+                "the temporal buffer had been established. "
+                "For both one-frame and two-frame dropouts, "
+                "two-miss tolerance recovered 29 frames "
+                "earlier on average, prevented one reset per "
+                "video, and produced 29 additional predictions "
+                "per video while maintaining 100% video-level "
+                "classification accuracy."
+            ),
+            "",
+            (
+                "10. At the three-frame dropout boundary in "
+                "EXP-012, the two-miss policy correctly reverted "
+                "to reset behavior and became equivalent to the "
+                "full-reset policy. This confirms the intended "
+                "operational boundary of the recovery strategy."
+            ),
+            "",
+            "## Interpretation",
+            "",
+            (
+                "The combined EXP-001 through EXP-012 evidence "
+                "shows that HLI-01 has a highly accurate and "
+                "computationally efficient classifier, with "
+                "strong tolerance to moderate coordinate and "
+                "temporal perturbations. The principal "
+                "system-level vulnerability identified during "
+                "validation was the strict real-time sequence "
+                "reset policy under intermittent landmark "
+                "detection."
+            ),
+            "",
+            (
+                "EXP-011 showed that this vulnerability is "
+                "unlikely to be activated frequently under "
+                "clean controlled recording conditions because "
+                "MediaPipe detection was highly reliable. "
+                "EXP-012 nevertheless demonstrated that when "
+                "short post-buffer interruptions do occur, the "
+                "two-miss temporal recovery policy substantially "
+                "reduces recovery delay and preserves prediction "
+                "availability without degrading classification "
+                "accuracy. Its benefit is deliberately bounded: "
+                "a third consecutive miss triggers reset and "
+                "restores the conservative behavior of the "
+                "original policy."
             ),
             "",
         ]
@@ -873,3 +1130,7 @@ def save_markdown_summary(
     )
 
     return path
+
+
+if __name__ == "__main__":
+    main()
