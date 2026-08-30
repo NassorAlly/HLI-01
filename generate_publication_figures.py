@@ -349,12 +349,23 @@ def figure2_attention_ablation(stats):
             alpha=0.8,
         )
 
+        label_offsets = {
+            42: 0.0024,
+            7: 0.0012,
+            21: 0.0024,
+            84: 0.0012,
+            123: 0.0002,
+        }
+
+        seed = int(row["seed"])
+
         ax.text(
-            x1 - 0.018,
-            y1 + 0.0012,
-            str(int(row["seed"])),
+            x1 - 0.025,
+            y1 + label_offsets[seed],
+            str(seed),
             fontsize=7.5,
             ha="right",
+            va="center",
         )
 
     exp = stats["EXP-004"]
